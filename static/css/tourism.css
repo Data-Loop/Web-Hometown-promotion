@@ -1,0 +1,183 @@
+.tourism-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: 100vh;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    background: url('../images/2.jpg') center/cover fixed no-repeat;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.page-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 2rem;
+}
+
+.spots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.spot-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.spot-card:hover {
+    transform: translateY(-5px);
+}
+
+/* 统一图片容器大小 */
+.spot-card .image-container {
+    width: 100%;
+    height: 200px; /* 固定高度 */
+    overflow: hidden;
+    position: relative;
+}
+
+/* 图片样式 */
+.spot-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 保持比例填充 */
+    object-position: center; /* 居中显示 */
+    transition: transform 0.3s ease;
+}
+
+.spot-card:hover img {
+    transform: scale(1.05);
+}
+
+.spot-info {
+    display: none; /* 默认隐藏 */
+    padding: 1rem;
+    background-color: #fff;
+}
+
+.spot-info h3 {
+    color: #333;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.spot-details {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.spot-details p {
+    margin-bottom: 0.5rem;
+}
+
+.description {
+    margin-top: 1rem;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* 添加或更新模态框样式 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+    overflow-y: auto; /* 添加垂直滚动 */
+}
+
+.modal-content {
+    background-color: white;
+    margin: 4% auto;
+    padding: 30px;
+    width: 85%;
+    max-width: 900px;
+    border-radius: 20px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: modalFadeIn 0.4s ease;
+    margin-bottom: 4%; /* 添加底部间距 */
+}
+
+.modal-content img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #666;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #000;
+}
+
+.modal-details {
+    margin-top: 20px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .tourism-container {
+        padding: 1rem;
+    }
+
+    .spots-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+    }
+}
+
+.spot-title {
+    padding: 1rem;
+    text-align: center;
+}
+
+.spot-title h3 {
+    margin: 0;
+    color: #333;
+}
+
+.spot-info.hidden {
+    display: none;
+}
+
+.spot-card {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.spot-card.expanded {
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}

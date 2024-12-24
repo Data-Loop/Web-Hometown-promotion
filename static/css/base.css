@@ -1,0 +1,234 @@
+/* 导航栏基础样式 */
+.navbar {
+    background: linear-gradient(to right, #2c3e50, #3498db);
+    padding: 1rem 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+}
+
+/* Logo样式 */
+.nav-logo a {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.nav-logo a:hover {
+    color: #f1c40f;
+}
+
+/* 导航链接样式 */
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-item {
+    color: #ecf0f1;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #f1c40f;
+}
+
+.nav-item.active {
+    background: rgba(255, 255, 255, 0.2);
+    color: #f1c40f;
+}
+
+/* 登录注册按钮样式 */
+.nav-auth {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.auth-btn {
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.login-btn {
+    background: transparent;
+    border: 2px solid #f1c40f;
+    color: #f1c40f;
+}
+
+.login-btn:hover {
+    background: #f1c40f;
+    color: #2c3e50;
+}
+
+.register-btn {
+    background: #f1c40f;
+    color: #2c3e50;
+    border: 2px solid #f1c40f;
+}
+
+.register-btn:hover {
+    background: #f39c12;
+    border-color: #f39c12;
+}
+
+/* 用户菜单样式 */
+.user-menu {
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.user-menu:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.username {
+    color: #f1c40f;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.username::after {
+    content: '▼';
+    font-size: 0.8em;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    min-width: 120px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    z-index: 1000;
+}
+
+.user-menu:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    color: #2c3e50;
+    padding: 0.8rem 1rem;
+    text-decoration: none;
+    display: block;
+    transition: background 0.3s ease;
+}
+
+.dropdown-content a:hover {
+    background: #f8f9fa;
+    color: #3498db;
+}
+
+/* 用户头像样式 */
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    background-color: #3498db;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    
+    .nav-links {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.5rem;
+        margin: 1rem 0;
+    }
+    
+    .nav-item {
+        text-align: center;
+    }
+    
+    .nav-auth {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .dropdown-content {
+        width: 100%;
+        position: static;
+    }
+}
+
+/* 页面内容调整 */
+.content {
+    margin-top: 80px; /* 为固定导航栏留出空间 */
+    min-height: calc(100vh - 80px);
+}
+
+/* 基础光标样式 */
+* {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='48' viewport='0 0 100 100' style='fill:red;font-size:24px;'><text y='50%'>❤</text></svg>") 16 0,
+           auto !important;
+}
+
+/* 可点击元素光标 */
+a, button, input[type="submit"], .clickable, .btn, .nav-item {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='48' viewport='0 0 100 100' style='fill:hotpink;font-size:24px;'><text y='50%'>❤</text></svg>") 16 0,
+           pointer !important;
+}
+
+/* 轨迹爱心样式 */
+.heart-trail {
+    pointer-events: none;
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    z-index: 10000;
+    transform-origin: center;
+    animation: floatAnimation 1s ease-out forwards;
+}
+
+/* 漂浮动画 */
+@keyframes floatAnimation {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-50px) scale(0.5);
+        opacity: 0;
+    }
+} 
