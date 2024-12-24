@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-box">
+        <h2>用户注册</h2>
+        <form method="POST" action="{{ url_for('register') }}" class="auth-form" id="register-form">
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" id="username" name="username" required 
+                       placeholder="请输入4-20位字母或数字">
+                <span class="error-message" id="username-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" name="password" required 
+                       placeholder="请输入至少6位密码">
+                <span class="error-message" id="password-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">确认密码</label>
+                <input type="password" id="confirm_password" name="confirm_password" required 
+                       placeholder="请再次输入密码">
+                <span class="error-message" id="confirm-password-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="real_name">姓名</label>
+                <input type="text" id="real_name" name="real_name" required 
+                       placeholder="请输入您的真实姓名">
+            </div>
+
+            <div class="form-group">
+                <label for="email">邮箱</label>
+                <input type="email" id="email" name="email" required 
+                       placeholder="请输入有效的邮箱地址">
+                <span class="error-message" id="email-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">电话</label>
+                <input type="tel" id="phone" name="phone" required 
+                       placeholder="请输入11位手机号码">
+                <span class="error-message" id="phone-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="address">地址</label>
+                <div class="address-group">
+                    <select id="province" name="province" required>
+                        <option value="">请选择省份</option>
+                        <option value="浙江省">浙江省</option>
+                        <option value="北京市">北京市</option>
+                        <option value="天津市">天津市</option>
+                        <option value="河北省">河北省</option>
+                        <option value="山西省">山西省</option>
+                        <option value="内蒙古自治区">内蒙古自治区</option>
+                        <option value="辽宁省">辽宁省</option>
+                        <option value="吉林省">吉林省</option>
+                        <option value="黑龙江省">黑龙江省</option>
+                        <option value="上海市">上海市</option>
+                        <option value="江苏省">江苏省</option>
+                        <option value="安徽省">安徽省</option>
+                        <option value="福建省">福建省</option>
+                        <option value="江西省">江西省</option>
+                        <option value="山东省">山东省</option>
+                        <option value="河南省">河南省</option>
+                        <option value="湖北省">湖北省</option>
+                        <option value="湖南省">湖南省</option>
+                        <option value="广东省">广东省</option>
+                        <option value="广西壮族自治区">广西壮族自治区</option>
+                        <option value="海南省">海南省</option>
+                        <option value="重庆市">重庆市</option>
+                        <option value="四川省">四川省</option>
+                        <option value="贵州省">贵州省</option>
+                        <option value="云南省">云南省</option>
+                        <option value="西藏自治区">西藏自治区</option>
+                        <option value="陕西省">陕西省</option>
+                        <option value="甘肃省">甘肃省</option>
+                        <option value="青海省">青海省</option>
+                        <option value="宁夏回族自治区">宁夏回族自治区</option>
+                        <option value="新疆维吾尔自治区">新疆维吾尔自治区</option>
+                        <option value="台湾省">台湾省</option>
+                        <option value="香港特别行政区">香港特别行政区</option>
+                        <option value="澳门特别行政区">澳门特别行政区</option>
+                    </select>
+                </div>
+                <textarea id="detailed_address" name="detailed_address" required 
+                          placeholder="请输入详细地址（街道、门牌号等）"></textarea>
+                <input type="hidden" id="full_address" name="address">
+            </div>
+
+            <button type="submit" class="auth-button">注册</button>
+        </form>
+        <div class="auth-links">
+            <p>已有账号？<a href="{{ url_for('login') }}">立即登录</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+<!-- 引入 china-area-data -->
+<!-- <script src="{{ url_for('static', filename='js/china-area-data.js') }}"></script> -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const provinceSelect = document.getElementById('province');
+    const citySelect = document.getElementById('city');
+    const districtSelect = document.getElementById('district');
+    
+    // 初始化省份数据
+    for (let code in areaData['86']) {
+        const option = new Option(areaData['86'][code], code);
+        provinceSelect.add(option);
+    }
+    
+    // 省份改变时更新城市
+    provinceSelect.addEventListener('change', function() {
+        citySelect.length = 1; // 清空城市选项，保留提示选项
+        districtSelect.length = 1; // 清空区县选项，保留提示选项
+        
+        if (this.value) {
+            const cities = areaData[this.value];
+            for (let code in cities) {
+                const option = new Option(cities[code], code);
+                citySelect.add(option);
+            }
+        }
+    });
+    
+    // 城市改变时更新区县
+    citySelect.addEventListener('change', function() {
+        districtSelect.length = 1; // 清空区县选项，保留提示选项
+        
+        if (this.value) {
+            const districts = areaData[this.value];
+            for (let code in districts) {
+                const option = new Option(districts[code], code);
+                districtSelect.add(option);
+            }
+        }
+    });
+    
+    // 表单提交时组合完整地址
+    document.getElementById('register-form').addEventListener('submit', function(e) {
+        e.preventDefault(); // 阻止表单默认提交
+        
+        // 组合完整地址
+        const province = document.getElementById('province').value;
+        const detailedAddress = document.getElementById('detailed_address').value;
+        
+        if (province && detailedAddress) {
+            document.getElementById('full_address').value = province + detailedAddress;
+            console.log('Full address:', document.getElementById('full_address').value); // 调试日志
+        }
+        
+        // 提交表单
+        this.submit();
+    });
+});
+</script>
+{% endblock %}

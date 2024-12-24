@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    /* 添加弹出框样式 */
+    .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 5px;
+        z-index: 1000;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="about-container">
+    <div class="about-content">
+        <div class="profile-section">
+            <div class="profile-image">
+                <img src="{{ url_for('static', filename='images/head.jpg') }}" alt="作者头像">
+            </div>
+            <div class="profile-info">
+                <h1>樊某</h1>
+                <p class="title">Web开发工程师（有可能）</p>
+                <p class="description">XX科技大学大学数据科学与大数据技术专业在读</p>
+                <p class="bio">热爱编程，专注于Web开发，擅长C++、Python和JavaScript。喜欢探索新技术，致力于创造优秀的用户体验。</p>
+            </div>
+        </div>
+
+        <div class="course-section">
+            <h2>课程简介：HTML5+CSS3网站设计</h2>
+            <div class="course-info">
+                <div class="course-item">
+                    <h3><i class="fas fa-book"></i> 课程概述</h3>
+                    <p>本课程主要介绍HTML5和CSS3的核心技术，通过实践项目培养学生的Web前端开发能力。</p>
+                </div>
+                <div class="course-item">
+                    <h3><i class="fas fa-graduation-cap"></i> 学习目标</h3>
+                    <ul>
+                        <li>掌握HTML5的新特性和语义化标签</li>
+                        <li>熟练运用CSS3的布局和动画效果</li>
+                        <li>能够独立完成响应式网站的设计与开发</li>
+                        <li>理解现代Web开发的最佳实践</li>
+                    </ul>
+                </div>
+                <div class="course-item">
+                    <h3><i class="fas fa-tasks"></i> 课程内容</h3>
+                    <ul>
+                        <li>HTML5新特性与语义化标签</li>
+                        <li>CSS3选择器与样式属性</li>
+                        <li>弹性盒子与网格布局</li>
+                        <li>响应式设计与媒体查询</li>
+                        <li>CSS3转换、过渡与动画</li>
+                        <li>Web字体与图标的应用</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-section">
+            <button onclick="showContact('QQ: 25XXXXX43')" class="contact-btn qq">
+                <i class="fab fa-qq"></i>
+            </button>
+            <button onclick="showContact('微博: @LoXXXXXXp03')" class="contact-btn weibo">
+                <i class="fab fa-weibo"></i>
+            </button>
+            <button onclick="showContact('电话: 18XXXXXX70')" class="contact-btn phone">
+                <i class="fas fa-phone"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 弹出框 -->
+<div id="popup" class="popup"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function showContact(info) {
+    const popup = document.getElementById('popup');
+    popup.textContent = info;
+    popup.style.display = 'block';
+    
+    // 3秒后自动隐藏
+    setTimeout(() => {
+        popup.style.display = 'none';
+    }, 3000);
+}
+</script>
+{% endblock %}

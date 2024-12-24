@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tourism.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="tourism-container">
+    <h1 class="page-title">宁波旅游景点</h1>
+    
+    <div class="spots-grid">
+        <!-- 天一阁 -->
+        <div class="spot-card">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='images/tourism/tyg.jpg') }}" alt="天一阁">
+            </div>
+            <div class="spot-title">
+                <h3>天一阁</h3>
+            </div>
+            <div class="spot-info" style="display: none;">
+                <div class="spot-details">
+                    <p><strong>地址：</strong> 宁波市海曙区天一街</p>
+                    <p><strong>开放时间：</strong> 8:00-17:00</p>
+                    <p><strong>门票：</strong> ¥30</p>
+                    <p class="description">天一阁是中国现存最古老的私人藏书楼，始建于明代嘉靖年间。这里不仅保存了大量珍贵典籍，建筑本身也是江南园林建筑的典范。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 月湖 -->
+        <div class="spot-card">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='images/tourism/yh.jpg') }}" alt="月湖">
+            </div>
+            <div class="spot-title">
+                <h3>月湖</h3>
+            </div>
+            <div class="spot-info" style="display: none;">
+                <div class="spot-details">
+                    <p><strong>地址：</strong> 宁波市海曙区中心城区</p>
+                    <p><strong>开放时间：</strong> 全天开放</p>
+                    <p><strong>门票：</strong> 免费</p>
+                    <p class="description">月湖是宁波市区最大的淡水湖，也是著名的人文景观。湖畔绿树成荫，亭台楼阁点缀其间，是市民休闲娱乐的好去处。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 保国寺 -->
+        <div class="spot-card">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='images/tourism/bgs.jpg') }}" alt="保国寺">
+            </div>
+            <div class="spot-title">
+                <h3>保国寺</h3>
+            </div>
+            <div class="spot-info" style="display: none;">
+                <div class="spot-details">
+                    <p><strong>地址：</strong> 宁波市江北区环城北路</p>
+                    <p><strong>开放时间：</strong> 7:30-16:30</p>
+                    <p><strong>门票：</strong> ¥20</p>
+                    <p class="description">保国寺是浙江省重点文物保护单位，以精美的木雕闻名。寺内古建筑保存完好，是研究古代建筑艺术的重要场所。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 东钱湖 -->
+        <div class="spot-card">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='images/tourism/dqh.jpg') }}" alt="东钱湖">
+            </div>
+            <div class="spot-title">
+                <h3>东钱湖</h3>
+            </div>
+            <div class="spot-info" style="display: none;">
+                <div class="spot-details">
+                    <p><strong>地址：</strong> 宁波市鄞州区东钱湖镇</p>
+                    <p><strong>开放时间：</strong> 全天开放</p>
+                    <p><strong>门票：</strong> 免费</p>
+                    <p class="description">东钱湖是浙江省最大的淡水湖之一，风景优美，是著名的度假胜地。这里水质清澈，环境优美，是避暑纳凉的理想去处。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 蒋氏宗祠 -->
+        <div class="spot-card">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='images/tourism/jszc.jpg') }}" alt="蒋氏宗祠">
+            </div>
+            <div class="spot-title">
+                <h3>蒋氏宗祠</h3>
+            </div>
+            <div class="spot-info" style="display: none;">
+                <div class="spot-details">
+                    <p><strong>地址：</strong> 宁波市奉化区溪口镇</p>
+                    <p><strong>开放时间：</strong> 8:30-16:30</p>
+                    <p><strong>门票：</strong> ¥60</p>
+                    <p class="description">蒋氏宗祠是溪口蒋氏家族的祠堂，建筑风格独特，集传统与现代于一体，是了解近代史的重要场所。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 素居 -->
+        <div class="spot-card">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='images/tourism/sj.jpg') }}" alt="素居">
+            </div>
+            <div class="spot-title">
+                <h3>素居</h3>
+            </div>
+            <div class="spot-info" style="display: none;">
+                <div class="spot-details">
+                    <p><strong>地址：</strong> 宁波市海曙区县学街</p>
+                    <p><strong>开放时间：</strong> 9:00-17:00</p>
+                    <p><strong>门票：</strong> ¥15</p>
+                    <p class="description">素居是清代著名学者全祖望的故居，体现了江南文人住宅的特色，庭院典雅，环境幽静。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 武岭门 -->
+        <div class="spot-card">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='images/tourism/wlm.jpg') }}" alt="武岭门">
+            </div>
+            <div class="spot-title">
+                <h3>武岭门</h3>
+            </div>
+            <div class="spot-info" style="display: none;">
+                <div class="spot-details">
+                    <p><strong>地址：</strong> 宁波市海曙区中山东路</p>
+                    <p><strong>开放时间：</strong> 全天开放</p>
+                    <p><strong>门票：</strong> 免费</p>
+                    <p class="description">武岭门是宁波古城墙的重要遗址，见证了宁波的历史变迁，是城市记忆的重要载体。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 武山庙 -->
+        <div class="spot-card">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='images/tourism/wsm.jpg') }}" alt="武山庙">
+            </div>
+            <div class="spot-title">
+                <h3>武山庙</h3>
+            </div>
+            <div class="spot-info" style="display: none;">
+                <div class="spot-details">
+                    <p><strong>地址：</strong> 宁波市江北区武山路</p>
+                    <p><strong>开放时间：</strong> 8:00-16:30</p>
+                    <p><strong>门票：</strong> ¥10</p>
+                    <p class="description">武山庙始建于唐代，是宁波地区重要的道教宫观，建筑古朴，环境清幽，是游览休闲的好去处。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 雪窦寺 -->
+        <div class="spot-card">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='images/tourism/xds.jpg') }}" alt="雪窦寺">
+            </div>
+            <div class="spot-title">
+                <h3>雪窦寺</h3>
+            </div>
+            <div class="spot-info" style="display: none;">
+                <div class="spot-details">
+                    <p><strong>地址：</strong> 宁波市奉化区溪口镇雪窦山</p>
+                    <p><strong>开放时间：</strong> 7:30-16:30</p>
+                    <p><strong>门票：</strong> ¥40</p>
+                    <p class="description">雪窦寺是浙江省著名的佛教寺院，始建于东晋，寺内保存有众多珍贵文物，是重要的佛教圣地。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/tourism.js') }}"></script>
+{% endblock %}

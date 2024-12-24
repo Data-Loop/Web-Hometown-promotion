@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/food.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="food-container">
+    <h1 class="page-title">宁波特色美食</h1>
+    
+    <div class="food-grid">
+        <div class="food-card" onclick="showDetails(0)">
+            <img src="{{ url_for('static', filename='images/food/tangyuan.jpg') }}" alt="宁波汤圆">
+            <div class="food-title">宁波汤圆</div>
+        </div>
+
+        <div class="food-card" onclick="showDetails(1)">
+            <img src="{{ url_for('static', filename='images/food/niangao.jpg') }}" alt="宁波年糕">
+            <div class="food-title">宁波年糕</div>
+        </div>
+
+        <div class="food-card" onclick="showDetails(2)">
+            <img src="{{ url_for('static', filename='images/food/maci.jpg') }}" alt="宁波麻糍">
+            <div class="food-title">宁波麻糍</div>
+        </div>
+
+        <div class="food-card" onclick="showDetails(3)">
+            <img src="{{ url_for('static', filename='images/food/haixianmian.jpg') }}" alt="宁波海鲜面">
+            <div class="food-title">宁波海鲜面</div>
+        </div>
+
+        <div class="food-card" onclick="showDetails(4)">
+            <img src="{{ url_for('static', filename='images/food/hgqh.jpg') }}" alt="红膏炝蟹">
+            <div class="food-title">红膏炝蟹</div>
+        </div>
+
+        <div class="food-card" onclick="showDetails(5)">
+            <img src="{{ url_for('static', filename='images/food/dsx.jpg') }}" alt="宁波老三鲜">
+            <div class="food-title">宁波老三鲜</div>
+        </div>
+
+        <div class="food-card" onclick="showDetails(6)">
+            <img src="{{ url_for('static', filename='images/food/btjy.jpg') }}" alt="冰糖甲鱼">
+            <div class="food-title">冰糖甲鱼</div>
+        </div>
+
+        <div class="food-card" onclick="showDetails(7)">
+            <img src="{{ url_for('static', filename='images/food/ynt.jpg') }}" alt="奉化芋艿头">
+            <div class="food-title">奉化芋艿头</div>
+        </div>
+    </div>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle"></h2>
+        <img id="modalImage" src="" alt="">
+        <div id="modalDescription"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/food.js') }}"></script>
+{% endblock %}

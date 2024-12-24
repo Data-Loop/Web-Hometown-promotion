@@ -1,0 +1,278 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/comments.css') }}">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+{% endblock %}
+
+{% block content %}
+<!-- 确保这些文件在页面中正确引入 -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- 修改为柱状图容器 -->
+<div id="distribution-chart" style="width: 800px; height: 400px; margin: 20px auto;"></div>
+
+<!-- 在评论表单之前添加这个模态框结构 -->
+<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">提示</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 添加弹幕容器 -->
+<div id="danmaku-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100;"></div>
+
+<!-- 原有的评论内容 -->
+<div class="comment-container">
+    <div class="content-wrapper">
+        <h1 class="page-title">游客评论</h1>
+        
+        <!-- 在评论表单上方添加消息显示区域 -->
+        <div id="message-area" class="alert" style="display: none; margin-bottom: 20px;"></div>
+
+        <!-- 评论表单 -->
+        <div class="comment-form-container">
+            <h2 class="section-title">发表评论</h2>
+            <form id="commentForm" method="POST" action="/comments">
+                <div class="form-group">
+                    <textarea class="form-control" name="content" required 
+                              placeholder="写下您的评论..." rows="3"></textarea>
+                </div>
+                <!-- 美化提交按钮 -->
+                <button type="submit" class="btn-comment">
+                    <span class="btn-text">发表评论</span>
+                    <div class="loading-spinner" style="display: none;">
+                        <span class="spinner"></span>
+                    </div>
+                </button>
+            </form>
+        </div>
+
+        <!-- 评论列表 -->
+        <div class="comments-section">
+            <h2 class="section-title">最新评论</h2>
+            <div id="comments-container">
+                {% for comment in comments %}
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <div class="user-info">
+                            <div class="user-avatar">{{ comment[4][0] }}</div>
+                            <div class="user-name">{{ comment[4] }}</div>
+                        </div>
+                        <div class="comment-date">{{ comment[3] }}</div>
+                    </div>
+                    <div class="comment-content">
+                        {{ comment[2] }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- 分页控件 -->
+            {% if total_pages > 1 %}
+            <div class="pagination">
+                {% if page > 1 %}
+                    <a href="{{ url_for('comments', page=1) }}" class="page-link">&laquo; 首页</a>
+                    <a href="{{ url_for('comments', page=page-1) }}" class="page-link">&lt; 上一页</a>
+                {% endif %}
+                
+                {# 计算显示的页码范围 #}
+                {% set start_page = page - 2 if page - 2 > 0 else 1 %}
+                {% set end_page = page + 2 if page + 2 < total_pages else total_pages %}
+                
+                {% for p in range(start_page, end_page + 1) %}
+                    {% if p == page %}
+                        <span class="page-link active">{{ p }}</span>
+                    {% else %}
+                        <a href="{{ url_for('comments', page=p) }}" class="page-link">{{ p }}</a>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page < total_pages %}
+                    <a href="{{ url_for('comments', page=page+1) }}" class="page-link">下一页 &gt;</a>
+                    <a href="{{ url_for('comments', page=total_pages) }}" class="page-link">末页 &raquo;</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- 添加消息提示区域 -->
+<div id="message-box" style="display:none; position: fixed; bottom: 20px; right: 20px; 
+     padding: 15px; border-radius: 5px; z-index: 1000;">
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- 保留 ECharts -->
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<script src="{{ url_for('static', filename='js/comments.js') }}"></script>
+
+<!-- 保留其他 JavaScript 代码 -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Initializing chart...');
+    
+    const chartContainer = document.getElementById('distribution-chart');
+    const myChart = echarts.init(chartContainer);
+    
+    // 从后端获取数据
+    fetch('/get_user_distribution')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Received data:', data);
+            
+            // 准备数据
+            const provinces = data.map(item => item.name);
+            const values = data.map(item => item.value);
+            
+            // 配置柱状图
+            const option = {
+                title: {
+                    text: '用户地理分布',
+                    subtext: '基于注册地址统计',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: provinces,
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 45
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '注册用户数'
+                },
+                series: [{
+                    name: '用户数',
+                    type: 'bar',
+                    data: values,
+                    itemStyle: {
+                        color: '#66b1ff'
+                    }
+                }],
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '15%',
+                    containLabel: true
+                }
+            };
+            
+            // 使用配置项显示图表
+            myChart.setOption(option);
+            console.log('Chart rendered');
+        })
+        .catch(error => {
+            console.error('Error loading chart data:', error);
+        });
+        
+    // 响应窗口大小变化
+    window.addEventListener('resize', () => {
+        myChart.resize();
+    });
+});
+
+function checkLogin(event) {
+    {% if 'user_id' not in session %}
+        event.preventDefault();
+        alert('请先登录后再发表评论！');
+        return false;
+    {% endif %}
+    return true;
+}
+
+// 弹幕相关代码
+function createDanmaku(text) {
+    const danmaku = document.createElement('div');
+    danmaku.className = 'danmaku';
+    danmaku.textContent = text;
+    
+    danmaku.style.position = 'absolute';
+    danmaku.style.whiteSpace = 'nowrap';
+    danmaku.style.color = 'white';
+    danmaku.style.textShadow = '1px 1px 2px black';
+    danmaku.style.fontSize = '20px';
+    
+    danmaku.style.top = Math.random() * 50 + 10 + '%';
+    danmaku.style.left = '100%';
+    
+    document.getElementById('danmaku-container').appendChild(danmaku);
+    
+    const duration = 15000 + Math.random() * 5000;
+    danmaku.animate([
+        { left: '100%' },
+        { left: '-100%' }
+    ], {
+        duration: duration,
+        easing: 'linear'
+    }).onfinish = () => danmaku.remove();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // 从API获取所有评论
+    fetch('/api/all-comments')
+        .then(response => response.json())
+        .then(comments => {
+            if (comments.length > 0) {
+                let index = 0;
+                
+                // 开始发送弹幕
+                setInterval(() => {
+                    createDanmaku(comments[index]);
+                    index = (index + 1) % comments.length;
+                }, 1000);
+                
+                // 每隔一段时间重新获取评论
+                setInterval(() => {
+                    fetch('/api/all-comments')
+                        .then(response => response.json())
+                        .then(newComments => {
+                            comments = newComments;
+                        })
+                        .catch(error => console.error('Error fetching comments:', error));
+                }, 30000); // 每30秒更新一次评论列表
+            }
+        })
+        .catch(error => console.error('Error fetching comments:', error));
+});
+</script>
+
+<!-- 添加弹幕样式 -->
+<style>
+.danmaku {
+    position: absolute;
+    white-space: nowrap;
+    color: white;
+    text-shadow: 1px 1px 2px black;
+    font-size: 20px;
+    pointer-events: none;
+    user-select: none;
+}
+</style>
+{% endblock %}

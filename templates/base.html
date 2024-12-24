@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>宁波特产网</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    {% block extra_css %}{% endblock %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- 自定义 CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/comments.css') }}">
+    <!-- 其他 CSS -->
+    {% block css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="{{ url_for('home') }}">宁波特产</a>
+            </div>
+            
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-item {% if request.endpoint == 'home' %}active{% endif %}">首页</a>
+                <a href="{{ url_for('products') }}" class="nav-item {% if request.endpoint == 'products' %}active{% endif %}">特产</a>
+                <a href="{{ url_for('food') }}" class="nav-item {% if request.endpoint == 'food' %}active{% endif %}">美食</a>
+                <a href="{{ url_for('tourism') }}" class="nav-item {% if request.endpoint == 'tourism' %}active{% endif %}">旅游</a>
+                <a href="{{ url_for('comments') }}" class="nav-item {% if request.endpoint == 'comments' %}active{% endif %}">评论</a>
+                <a href="{{ url_for('about') }}" class="nav-item {% if request.endpoint == 'about' %}active{% endif %}">关于</a>
+            </div>
+
+            <div class="nav-auth">
+                {% if 'user_id' in session %}
+                    <div class="user-menu">
+                        <div class="user-avatar">{{ session['username'][0] }}</div>
+                        <span class="username">{{ session['username'] }}</span>
+                        <div class="dropdown-content">
+                            <a href="{{ url_for('cart') }}">购物车</a>
+                            <a href="{{ url_for('logout') }}">退出登录</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="auth-btn login-btn">登录</a>
+                    <a href="{{ url_for('register') }}" class="auth-btn register-btn">注册</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- 必要的 JS 文件 -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {% block scripts %}{% endblock %}
+    {% block extra_js %}{% endblock %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let lastX = 0;
+        let lastY = 0;
+        
+        // 移动轨迹效果 - 增加最小距离阈值到60像素
+        document.addEventListener('mousemove', function(e) {
+            if (Math.abs(e.clientX - lastX) + Math.abs(e.clientY - lastY) < 60) return; // 增加间距
+            
+            lastX = e.clientX;
+            lastY = e.clientY;
+            
+            const heart = document.createElement('span');
+            heart.textContent = '❤';
+            heart.style.position = 'fixed';
+            heart.style.left = e.clientX + 'px';
+            heart.style.top = e.clientY + 'px';
+            heart.style.pointerEvents = 'none';
+            heart.style.fontSize = '18px';
+            heart.style.zIndex = '10000';
+            heart.style.opacity = '0.6'; // 降低透明度
+            heart.style.transition = 'all 1s ease-out';
+            heart.style.transform = 'translateY(0) scale(1)';
+            
+            document.body.appendChild(heart);
+            
+            requestAnimationFrame(() => {
+                heart.style.transform = 'translateY(-50px) scale(0.5)';
+                heart.style.opacity = '0';
+            });
+            
+            setTimeout(() => heart.remove(), 1000);
+        });
+        
+        // 点击爆炸效果 - 减少爱心数量
+        document.addEventListener('click', function(e) {
+            for (let i = 0; i < 12; i++) { // 减少爱心数量到12个
+                const heart = document.createElement('span');
+                heart.textContent = '❤';
+                heart.style.position = 'fixed';
+                heart.style.left = e.clientX + 'px';
+                heart.style.top = e.clientY + 'px';
+                heart.style.pointerEvents = 'none';
+                heart.style.fontSize = '20px';
+                heart.style.zIndex = '10000';
+                heart.style.opacity = '0.9'; // 调整透明度
+                heart.style.transition = 'all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1)';
+                
+                document.body.appendChild(heart);
+                
+                const angle = (i * 30) + Math.random() * 15; // 增加角度间隔
+                const distance = 40 + Math.random() * 60; // 调整扩散范围
+                const rad = angle * Math.PI / 180;
+                
+                requestAnimationFrame(() => {
+                    heart.style.transform = `translate(
+                        ${Math.cos(rad) * distance}px, 
+                        ${Math.sin(rad) * distance}px
+                    ) scale(0)`;
+                    heart.style.opacity = '0';
+                });
+                
+                setTimeout(() => heart.remove(), 800);
+            }
+        });
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <!-- 轮播图部分 -->
+    <div class="carousel-container">
+        <div class="carousel">
+            <div class="carousel-slides">
+                <div class="slide">
+                    <img src="{{ url_for('static', filename='images/2.jpg') }}" alt="宁波风景">
+                </div>
+                <div class="slide">
+                    <img src="{{ url_for('static', filename='images/3.jpg') }}" alt="宁波美食">
+                </div>
+                <div class="slide">
+                    <img src="{{ url_for('static', filename='images/4.jpg') }}" alt="宁波特产">
+                </div>
+            </div>
+            <div class="carousel-dots"></div>
+        </div>
+        <div class="welcome-text">
+            <h1>欢迎来到宁波</h1>
+        </div>
+    </div>
+
+    <!-- 快捷导航按钮 -->
+    <div class="quick-nav">
+        <a href="{{ url_for('comments') }}" class="nav-button">
+            <i class="icon-comment"></i>
+            <span>评论</span>
+        </a>
+        <a href="{{ url_for('food') }}" class="nav-button">
+            <i class="icon-food"></i>
+            <span>美食</span>
+        </a>
+        <a href="{{ url_for('tourism') }}" class="nav-button">
+            <i class="icon-tourism"></i>
+            <span>旅游</span>
+        </a>
+        <a href="{{ url_for('products') }}" class="nav-button">
+            <i class="icon-shopping"></i>
+            <span>特产</span>
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+{% endblock %}

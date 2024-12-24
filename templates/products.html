@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/products.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="products-container">
+    <h1 class="page-title">宁波特产</h1>
+    
+    <div class="products-grid">
+        {% for product in products %}
+        <div class="product-card" data-product-id="{{ product[0] }}">
+            <img src="{{ url_for('static', filename='images/products/' + product[5]) }}" alt="{{ product[1] }}">
+            <div class="product-info">
+                <h3 class="product-name">{{ product[1] }}</h3>
+                <p class="short-description">{{ product[2][:50] }}...</p>
+                <!-- 详细描述（默认隐藏） -->
+                <div class="full-description" id="description-{{ product[0] }}" style="display: none;">
+                    {{ product[2] }}
+                </div>
+                <!-- 查看详情按钮 -->
+                <button class="detail-btn" onclick="toggleDescription({{ product[0] }})">
+                    查看详情
+                </button>
+                <div class="price-info">
+                    <span class="original-price">¥{{ "%.2f"|format(product[3]) }}</span>
+                    <span class="current-price">¥{{ "%.2f"|format(product[4]) }}</span>
+                </div>
+                <div class="product-buttons">
+                    {% if 'user_id' in session %}
+                        <button class="add-to-cart" data-product-id="{{ product[0] }}">加入购物车</button>
+                        <button class="buy-now" onclick="buyNow({{ product[0] }})">立即购买</button>
+                    {% else %}
+                        <button class="login-required" onclick="showLoginAlert()">请先登录再选购</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- 购买确认模态框 -->
+<div id="purchaseModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>确认订单</h2>
+        <form id="purchaseForm">
+            <div class="form-group">
+                <label for="name">收货人</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">联系电话</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="address">收货地址</label>
+                <textarea id="address" name="address" required></textarea>
+            </div>
+            <div class="order-summary">
+                <h3>订单摘要</h3>
+                <div class="product-summary"></div>
+                <div class="total-price"></div>
+            </div>
+            <button type="submit" class="confirm-purchase">确认购买</button>
+        </form>
+    </div>
+</div>
+
+<!-- 购物车悬浮按钮 -->
+{% if 'user_id' in session %}
+<div class="cart-float">
+    <a href="{{ url_for('cart') }}" class="cart-button">
+        <i class="cart-icon">🛒</i>
+        <span class="cart-count">0</span>
+    </a>
+</div>
+{% endif %}
+
+<!-- 结算模态框 -->
+<div id="checkoutModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>确认订单</h2>
+        <div class="order-summary">
+            <h3>订单商品</h3>
+            <div class="selected-items">
+                <!-- 这里会通过 JavaScript 动态填充选中的商品 -->
+            </div>
+            <div class="order-total">
+                总计：<span id="modal-total">￥0.00</span>
+            </div>
+        </div>
+        <div class="shipping-info">
+            <h3>收货信息</h3>
+            <form id="checkoutForm">
+                <div class="form-group">
+                    <label for="receiver">收货人</label>
+                    <input type="text" id="receiver" name="receiver" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">联系电话</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">收货地址</label>
+                    <textarea id="address" name="address" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="note">备注</label>
+                    <textarea id="note" name="note"></textarea>
+                </div>
+                <button type="submit" class="submit-order">提交订单</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/products.js') }}"></script>
+<script>
+function toggleDescription(productId) {
+    const shortDesc = document.querySelector(`#description-${productId}`);
+    const btn = event.target;
+    
+    if (shortDesc.style.display === 'none') {
+        shortDesc.style.display = 'block';
+        btn.textContent = '收起详情';
+    } else {
+        shortDesc.style.display = 'none';
+        btn.textContent = '查看详情';
+    }
+}
+
+function showLoginAlert() {
+    alert('请先登录后再进行购物！');
+}
+
+// ... 其他已有的 JavaScript 代码 ...
+</script>
+{% endblock %}

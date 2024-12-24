@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-avatar">
+            <img src="{{ url_for('static', filename='images/avatar.png') }}" alt="用户头像">
+            <button class="change-avatar">更换头像</button>
+        </div>
+        <div class="profile-info">
+            <h2>{{ user.username }}</h2>
+            <p>注册时间：{{ user.created_at.strftime('%Y-%m-%d') }}</p>
+        </div>
+    </div>
+
+    <div class="profile-content">
+        <div class="profile-nav">
+            <button class="nav-btn active" data-tab="info">个人信息</button>
+            <button class="nav-btn" data-tab="orders">我的订单</button>
+            <button class="nav-btn" data-tab="comments">我的评论</button>
+            <button class="nav-btn" data-tab="security">账号安全</button>
+        </div>
+
+        <div class="tab-content">
+            <!-- 个人信息标签页 -->
+            <div class="tab-pane active" id="info">
+                <form id="profileForm" class="profile-form">
+                    <div class="form-group">
+                        <label for="realName">真实姓名</label>
+                        <input type="text" id="realName" name="real_name" value="{{ user.real_name or '' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">手机号码</label>
+                        <input type="tel" id="phone" name="phone" value="{{ user.phone or '' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">电子邮箱</label>
+                        <input type="email" id="email" name="email" value="{{ user.email or '' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">收货地址</label>
+                        <textarea id="address" name="address">{{ user.address or '' }}</textarea>
+                    </div>
+                    <button type="submit" class="save-btn">保存修改</button>
+                </form>
+            </div>
+
+            <!-- 订单标签页 -->
+            <div class="tab-pane" id="orders">
+                {% if orders %}
+                <div class="orders-list">
+                    {% for order in orders %}
+                    <div class="order-card">
+                        <div class="order-header">
+                            <span class="order-id">订单号：{{ order.order_number }}</span>
+                            <span class="order-date">{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                            <span class="order-status">{{ order.status }}</span>
+                        </div>
+                        <div class="order-items">
+                            {% for item in order.items %}
+                            <div class="order-item">
+                                <img src="{{ url_for('static', filename='images/' + item.image) }}" alt="{{ item.name }}">
+                                <div class="item-info">
+                                    <h4>{{ item.name }}</h4>
+                                    <p>数量：{{ item.quantity }}</p>
+                                    <p>单价：¥{{ "%.2f"|format(item.price) }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="order-footer">
+                            <div class="order-total">
+                                总计：¥{{ "%.2f"|format(order.total_amount) }}
+                            </div>
+                            {% if order.status == '待评价' %}
+                            <button class="review-btn" data-order-id="{{ order.id }}">评价</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-message">
+                    <p>暂无订单记录</p>
+                    <a href="{{ url_for('products') }}" class="go-shopping">去购物</a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- 评论标签页 -->
+            <div class="tab-pane" id="comments">
+                {% if comments %}
+                <div class="comments-list">
+                    {% for comment in comments %}
+                    <div class="comment-card">
+                        <div class="comment-header">
+                            <div class="rating-display">
+                                {% for i in range(comment.rating) %}
+                                <span class="star">★</span>
+                                {% endfor %}
+                            </div>
+                            <span class="comment-date">{{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                        </div>
+                        <div class="comment-content">{{ comment.content }}</div>
+                        <button class="delete-comment" data-id="{{ comment.id }}">删除</button>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-message">
+                    <p>暂无评论记录</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- 账号安全标签页 -->
+            <div class="tab-pane" id="security">
+                <form id="passwordForm" class="security-form">
+                    <div class="form-group">
+                        <label for="currentPassword">当前密码</label>
+                        <input type="password" id="currentPassword" name="current_password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">新密码</label>
+                        <input type="password" id="newPassword" name="new_password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">确认新��码</label>
+                        <input type="password" id="confirmPassword" name="confirm_password" required>
+                    </div>
+                    <button type="submit" class="save-btn">修改密码</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 评价模态框 -->
+<div id="reviewModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>商品评价</h3>
+        <form id="reviewForm">
+            <div class="rating">
+                <span>评分：</span>
+                <div class="stars">
+                    <input type="radio" id="star5" name="rating" value="5">
+                    <label for="star5">★</label>
+                    <input type="radio" id="star4" name="rating" value="4">
+                    <label for="star4">★</label>
+                    <input type="radio" id="star3" name="rating" value="3">
+                    <label for="star3">★</label>
+                    <input type="radio" id="star2" name="rating" value="2">
+                    <label for="star2">★</label>
+                    <input type="radio" id="star1" name="rating" value="1">
+                    <label for="star1">★</label>
+                </div>
+            </div>
+            <textarea name="content" placeholder="请输入评价内容..." required></textarea>
+            <button type="submit">提交评价</button>
+        </form>
+    </div>
+</div>
+
+<!-- 头像上传模态框 -->
+<div id="avatarModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>更换头像</h3>
+        <form id="avatarForm">
+            <div class="avatar-upload">
+                <input type="file" id="avatarInput" name="avatar" accept="image/*">
+                <div class="preview-container">
+                    <img id="avatarPreview" src="#" alt="预览">
+                </div>
+            </div>
+            <button type="submit">上传</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+{% endblock %} 
